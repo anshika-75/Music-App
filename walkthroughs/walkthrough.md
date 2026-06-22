@@ -1,6 +1,6 @@
 # Walkthrough - Music App (Part 1)
 
-We have successfully generated and implemented the **Music App** Rails project, adhering strictly to the requirements. The codebase is clean, beginner-friendly, and fully functional. Docker was removed entirely from the project workspace.
+We have successfully generated and implemented the **Music App** Rails project, adhering strictly to the requirements. The codebase is clean, beginner-friendly, and fully functional.
 
 We have separated the documentation guides for the Frontend and Backend components of the project in this folder.
 
