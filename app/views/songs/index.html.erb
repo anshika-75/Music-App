@@ -1,0 +1,71 @@
+<div class="grid-2">
+  <div>
+    <div class="container-card">
+      <h2>Artist Profile Information</h2>
+      <div style="margin-top: 1rem;">
+        <div class="form-group">
+          <label>Artist / Band Name</label>
+          <p style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary);">
+            <%= current_user.artist_profile&.name.presence || "No Name Provided" %>
+          </p>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <p style="color: var(--text-primary);"><%= current_user.email %></p>
+        </div>
+        <div class="form-group">
+          <label>Biography</label>
+          <p style="white-space: pre-wrap;"><%= current_user.artist_profile&.bio.presence || "No biography added yet." %></p>
+        </div>
+        <div style="margin-top: 1.5rem;">
+          <a href="<%= edit_artist_profile_path(current_user.artist_profile) %>" class="btn btn-secondary" style="width: 100%;">Edit Profile Details</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-card" style="padding: 2rem;">
+      <h3>Publish Music</h3>
+      <p style="font-size: 0.9rem; margin-top: 0.5rem; margin-bottom: 1.5rem;">Ready to share a new track with your listeners? Upload an MP3 file to publish it.</p>
+      <a href="<%= new_song_path %>" class="btn btn-primary" style="width: 100%;">🎵 Upload New Song</a>
+    </div>
+  </div>
+
+  <div>
+    <div class="container-card" style="height: 100%;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2>My Uploaded Songs</h2>
+        <span class="role-badge" style="background-color: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.2);"><%= pluralize(@songs.size, "track") %></span>
+      </div>
+
+      <% if @songs.any? %>
+        <div class="song-list-grid">
+          <% @songs.each do |song| %>
+            <div class="song-card">
+              <div class="song-info">
+                <a href="<%= song_path(song) %>" class="song-title"><%= song.title %></a>
+                <div class="song-meta">
+                  <span>🏷️ <strong><%= song.genre.presence || "General" %></strong></span>
+                  <span>📅 <%= song.created_at.strftime("%b %d, %Y") %></span>
+                </div>
+                <% if song.description.present? %>
+                  <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem; margin-bottom: 0; line-clamp: 2; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden;">
+                    <%= song.description %>
+                  </p>
+                <% end %>
+              </div>
+              <div class="song-actions">
+                <a href="<%= edit_song_path(song) %>" class="btn btn-secondary btn-sm">Edit</a>
+                <%= button_to "Delete", song_path(song), method: :delete, data: { confirm: "Are you sure you want to delete this song?" }, class: "btn btn-danger btn-sm" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="empty-state">
+          <p style="font-size: 1.5rem; margin-bottom: 0.5rem;">📻 No tracks found</p>
+          <p style="font-size: 0.9rem; margin-bottom: 0;">You haven't uploaded any music yet. Click the "Upload New Song" button to get started.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

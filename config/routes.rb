@@ -9,6 +9,19 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  root "sessions#new"
+
+  # RESTful resources
+  resources :users, only: [:new, :create, :destroy]
+  resources :songs
+  resources :artist_profiles, only: [:edit, :update]
+  resources :listener_profiles, only: [:edit, :update]
+
+  # Custom routes
+  get "/login", to: "sessions#new", as: :login
+  post "/login", to: "sessions#create"
+  delete "/logout", to: "sessions#destroy", as: :logout
+
+  get "/search", to: "search#index", as: :search
+  get "/search/results", to: "search#results", as: :search_results
 end

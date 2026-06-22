@@ -1,0 +1,49 @@
+<div class="container-card" style="max-width: 700px; margin: 0 auto;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+    <div>
+      <span class="role-badge" style="background-color: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.2); margin-bottom: 0.75rem; display: inline-block;">
+        <%= @song.genre.presence || "General" %>
+      </span>
+      <h2><%= @song.title %></h2>
+      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0;">
+        Uploaded on <%= @song.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+      </p>
+    </div>
+    
+    <% if artist? %>
+      <div class="song-actions">
+        <a href="<%= edit_song_path(@song) %>" class="btn btn-secondary btn-sm">Edit Track</a>
+      </div>
+    <% end %>
+  </div>
+
+  <div style="background-color: rgba(15, 23, 42, 0.5); border: 1px solid var(--border-color); border-radius: var(--border-radius-md); padding: 1.5rem; margin-bottom: 2rem;">
+    <h3 style="font-size: 1rem; margin-bottom: 0.75rem; color: var(--text-secondary);">Audio Playback</h3>
+    
+    <div class="audio-player-wrapper">
+      <audio src="<%= @song.mp3_file_path %>" controls controlsList="nodownload"></audio>
+    </div>
+
+    <div style="margin-top: 1rem; font-size: 0.9rem;">
+      <span>🔗 MP3 Link: </span>
+      <a href="<%= @song.mp3_file_path %>" target="_blank" style="word-break: break-all;"><%= @song.mp3_file_path %></a>
+    </div>
+  </div>
+
+  <% if @song.description.present? %>
+    <div class="form-group mb-8">
+      <label>Description</label>
+      <p style="background-color: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 1.25rem; border-radius: var(--border-radius-md); white-space: pre-wrap; color: var(--text-primary);">
+        <%= @song.description %>
+      </p>
+    </div>
+  <% end %>
+
+  <div class="btn-group">
+    <% if artist? %>
+      <a href="<%= songs_path %>" class="btn btn-secondary">← Back to Dashboard</a>
+    <% else %>
+      <a href="<%= search_path %>" class="btn btn-secondary">← Back to Search</a>
+    <% end %>
+  </div>
+</div>

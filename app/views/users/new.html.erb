@@ -1,0 +1,42 @@
+<div class="welcome-container" style="max-width: 500px;">
+  <h2>Create Your Account</h2>
+  <p class="welcome-subtitle">Join us to start uploading or searching music.</p>
+
+  <div class="container-card" style="text-align: left; padding: 2rem; margin-top: 1rem; border-radius: var(--border-radius-md);">
+    <% if @user.errors.any? %>
+      <div class="form-errors">
+        <h3><%= pluralize(@user.errors.count, "error") %> prohibited this account from being saved:</h3>
+        <ul>
+          <% @user.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= form_with model: @user, local: true, data: { turbo: false } do |f| %>
+      <div class="form-group">
+        <%= f.label :email, "Email Address" %>
+        <%= f.email_field :email, placeholder: "email@example.com", required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password, "Password" %>
+        <%= f.password_field :password, placeholder: "Create a password", required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :role, "Who are you?" %>
+        <%= f.select :role, [["I am an Artist (upload songs)", "artist"], ["I am a Listener (search songs)", "listener"]], {}, { required: true } %>
+      </div>
+
+      <div style="margin-top: 2rem;">
+        <%= f.submit "Create Account", class: "btn btn-primary", style: "width: 100%;" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div style="margin-top: 1.5rem;">
+    <p>Already have an account? <a href="<%= login_path %>" style="font-weight: 600;">Sign In here</a></p>
+  </div>
+</div>

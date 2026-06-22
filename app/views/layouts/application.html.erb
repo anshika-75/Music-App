@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Project" %></title>
+    <title><%= content_for(:title) || "Music App" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Project">
+    <meta name="application-name" content="Music App">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -23,6 +23,49 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header>
+      <div class="nav-container">
+        <a href="<%= root_path %>" class="logo">
+          <span>🎵</span> Music App
+        </a>
+        <nav class="nav-actions">
+          <% if logged_in? %>
+            <div class="user-info">
+              <span><%= current_user.email %></span>
+              <span class="role-badge <%= current_user.role %>"><%= current_user.role %></span>
+            </div>
+
+            <% if artist? %>
+              <a href="<%= songs_path %>" class="btn btn-secondary btn-sm">My Dashboard</a>
+              <a href="<%= edit_artist_profile_path(current_user.artist_profile) %>" class="btn btn-secondary btn-sm">Edit Profile</a>
+            <% elsif listener? %>
+              <a href="<%= search_path %>" class="btn btn-secondary btn-sm">Search Songs</a>
+              <a href="<%= edit_listener_profile_path(current_user.listener_profile) %>" class="btn btn-secondary btn-sm">Edit Profile</a>
+            <% end %>
+
+            <%= button_to "Logout", logout_path, method: :delete, class: "btn btn-danger btn-sm" %>
+          <% else %>
+            <a href="<%= login_path %>" class="btn btn-secondary btn-sm">Login</a>
+            <a href="<%= new_user_path %>" class="btn btn-primary btn-sm">Register</a>
+          <% end %>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <% if flash[:notice] %>
+        <div class="flash flash-notice">
+          <span>✨</span> <%= flash[:notice] %>
+        </div>
+      <% end %>
+
+      <% if flash[:alert] %>
+        <div class="flash flash-alert">
+          <span>⚠️</span> <%= flash[:alert] %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
   </body>
 </html>
