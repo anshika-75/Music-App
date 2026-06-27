@@ -1,0 +1,45 @@
+<div class="container-card" style="max-width: 650px; margin: 0 auto;">
+  <h2>Edit Song Details</h2>
+  <p class="mb-8">Modify the metadata of your track. To change the audio file itself, upload a new MP3 file (which creates a new song record).</p>
+
+  <% if @song.errors.any? %>
+    <div class="form-errors">
+      <h3><%= pluralize(@song.errors.count, "error") %> prohibited this song from being updated:</h3>
+      <ul>
+        <% @song.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @song, url: artist_song_path(@song), method: :patch, local: true, multipart: true, data: { turbo: false } do |f| %>
+    <div class="form-group">
+      <%= f.label :title, "Song Title" %>
+      <%= f.text_field :title, placeholder: "e.g. Moonlight Sonata", required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :genre, "Genre / Category" %>
+      <%= f.text_field :genre, placeholder: "e.g. Classical, Electronic, Rock" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :description, "Description" %>
+      <%= f.text_area :description, placeholder: "Describe your song..." %>
+    </div>
+
+    <div class="form-group" style="border: 1px dashed var(--border-color); padding: 1.5rem; border-radius: var(--border-radius-md); background-color: rgba(255, 255, 255, 0.02);">
+      <%= f.label :mp3_file, "Replace Audio File (Optional)" %>
+      <%= f.file_field :mp3_file, accept: ".mp3" %>
+      <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.5rem; margin-bottom: 0;">
+        ⚠️ <strong>Note:</strong> Uploading a new MP3 file here will leave this track unchanged and instead **publish a new song upload** with the chosen audio and the current fields above.
+      </p>
+    </div>
+
+    <div class="btn-group">
+      <%= f.submit "Update Song", class: "btn btn-primary" %>
+      <a href="<%= artist_songs_path %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  <% end %>
+</div>

@@ -43,9 +43,9 @@ class UsersController < ApplicationController
 
   def redirect_to_dashboard
     if artist?
-      redirect_to songs_path
+      redirect_to artist_songs_path
     elsif listener?
-      redirect_to search_path
+      redirect_to listener_search_path
     else
       redirect_to root_path
     end

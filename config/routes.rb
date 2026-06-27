@@ -1,27 +1,31 @@
+# Define the URL routing rules for the application.
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Health check endpoint for uptime monitoring and deployment verification
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
+  # Defines the default homepage (pointing to the Login form)
   root "sessions#new"
-
-  # RESTful resources
+#session - controller , index -> action
+  # User signup and account deletion routes (handled by UsersController)
   resources :users, only: [:new, :create, :destroy]
-  resources :songs
-  resources :artist_profiles, only: [:edit, :update]
-  resources :listener_profiles, only: [:edit, :update]
 
-  # Custom routes
+  # Namespace for Artist actions. Prefixes URL paths with '/artist' 
+  # and maps them to controllers in the 'Artist::' module.
+  namespace :artist do
+    resources :songs                                # Artist dashboard and Song CRUD (new, create, show, edit, update, destroy)
+    resources :profiles, only: [:edit, :update]    # Artist profile metadata edits
+  end
+
+  # Namespace for Listener actions. Prefixes URL paths with '/listener'
+  # and maps them to controllers in the 'Listener::' module.
+  namespace :listener do
+    resources :profiles, only: [:edit, :update]    # Listener profile edits & avatar photo uploads
+    get "/search", to: "searches#index", as: :search                # Initial search dashboard view
+    get "/search/results", to: "searches#results", as: :search_results  # Search query results page
+  end
+
+  # Login / Session routes mapped to SessionsController
   get "/login", to: "sessions#new", as: :login
   post "/login", to: "sessions#create"
   delete "/logout", to: "sessions#destroy", as: :logout
-
-  get "/search", to: "search#index", as: :search
-  get "/search/results", to: "search#results", as: :search_results
 end

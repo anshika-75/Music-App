@@ -1,0 +1,62 @@
+<div class="container-card" style="max-width: 600px; margin: 0 auto;">
+  <h2>Edit Listener Profile</h2>
+  <p class="mb-8">Update your profile settings, avatar, and login credentials.</p>
+
+  <% if @profile.errors.any? %>
+    <div class="form-errors">
+      <h3><%= pluralize(@profile.errors.count, "error") %> prohibited this profile from being saved:</h3>
+      <ul>
+        <% @profile.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @profile, url: listener_profile_path(@profile), method: :patch, local: true, multipart: true, data: { turbo: false } do |f| %>
+    
+    <div class="profile-section">
+      <div class="profile-avatar-container">
+        <% if @profile.profile_photo.present? %>
+          <img src="<%= @profile.profile_photo %>" alt="Profile Photo">
+        <% else %>
+          <div class="profile-avatar-fallback">👤</div>
+        <% end %>
+      </div>
+      <div class="form-group" style="flex: 1; margin-bottom: 0;">
+        <%= f.label :profile_photo, "Upload Profile Photo" %>
+        <%= f.file_field :profile_photo, accept: "image/*" %>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">Supported formats: JPG, PNG, GIF</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :name, "Your Full Name" %>
+      <%= f.text_field :name, placeholder: "e.g. John Doe" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :email, "Email Address" %>
+      <%= f.email_field :email, value: current_user.email, required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password, "New Password (leave blank to keep current)" %>
+      <%= f.password_field :password, placeholder: "••••••••" %>
+    </div>
+
+    <div class="btn-group">
+      <%= f.submit "Save Profile", class: "btn btn-primary" %>
+      <a href="<%= listener_search_path %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  <% end %>
+
+  <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 3rem 0 2rem 0;">
+
+  <div style="background-color: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.15); border-radius: var(--border-radius-md); padding: 1.5rem;">
+    <h3 style="color: var(--danger); font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 600;">Danger Zone</h3>
+    <p style="font-size: 0.9rem; margin-bottom: 1.25rem;">Deleting your account will permanently erase your profile and listener preferences. This action cannot be undone.</p>
+    
+    <%= button_to "Delete Account", user_path(current_user), method: :delete, data: { confirm: "Are you sure you want to delete your listener account? This action cannot be undone." }, class: "btn btn-danger", style: "width: auto;" %>
+  </div>
+</div>

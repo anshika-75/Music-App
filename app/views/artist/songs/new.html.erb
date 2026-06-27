@@ -1,0 +1,42 @@
+<div class="container-card" style="max-width: 650px; margin: 0 auto;">
+  <h2>Upload New Song</h2>
+  <p class="mb-8">Publish your music track. Only MP3 files (.mp3) are allowed.</p>
+
+  <% if @song.errors.any? %>
+    <div class="form-errors">
+      <h3><%= pluralize(@song.errors.count, "error") %> prohibited this song from being saved:</h3>
+      <ul>
+        <% @song.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @song, url: artist_songs_path, local: true, multipart: true, data: { turbo: false } do |f| %>
+    <div class="form-group">
+      <%= f.label :title, "Song Title *" %>
+      <%= f.text_field :title, placeholder: "e.g. Moonlight Sonata", required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :genre, "Genre / Category" %>
+      <%= f.text_field :genre, placeholder: "e.g. Classical, Electronic, Rock" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :description, "Description" %>
+      <%= f.text_area :description, placeholder: "Describe your song, tell the story behind it..." %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :mp3_file, "Select MP3 File * (.mp3 only)" %>
+      <%= f.file_field :mp3_file, accept: ".mp3", required: true %>
+    </div>
+
+    <div class="btn-group">
+      <%= f.submit "Upload Song", class: "btn btn-primary" %>
+      <a href="<%= artist_songs_path %>" class="btn btn-secondary">Cancel</a>
+    </div>
+  <% end %>
+</div>

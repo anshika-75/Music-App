@@ -36,10 +36,10 @@
             </div>
 
             <% if artist? %>
-              <a href="<%= songs_path %>" class="btn btn-secondary btn-sm">My Dashboard</a>
+              <a href="<%= artist_songs_path %>" class="btn btn-secondary btn-sm">My Dashboard</a>
               <a href="<%= edit_artist_profile_path(current_user.artist_profile) %>" class="btn btn-secondary btn-sm">Edit Profile</a>
             <% elsif listener? %>
-              <a href="<%= search_path %>" class="btn btn-secondary btn-sm">Search Songs</a>
+              <a href="<%= listener_search_path %>" class="btn btn-secondary btn-sm">Search Songs</a>
               <a href="<%= edit_listener_profile_path(current_user.listener_profile) %>" class="btn btn-secondary btn-sm">Edit Profile</a>
             <% end %>
 

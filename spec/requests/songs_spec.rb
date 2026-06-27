@@ -12,13 +12,13 @@ RSpec.describe "Songs CRUD", type: :request do
   describe "Access Control" do
     it "denies access to index for listeners" do
       post login_path, params: { email: 'listener@example.com', password: 'password' }
-      get songs_path
+      get artist_songs_path
       expect(response).to redirect_to(root_path)
     end
 
     it "allows access to index for artists" do
       post login_path, params: { email: 'artist@example.com', password: 'password' }
-      get songs_path
+      get artist_songs_path
       expect(response).to have_http_status(:success)
     end
   end
@@ -31,13 +31,13 @@ RSpec.describe "Songs CRUD", type: :request do
 
     it "creates a new song" do
       dummy_file = fixture_file_upload(Rails.root.join('Gemfile'), 'audio/mpeg') # Use any file, we will stub upload
-      allow_any_instance_of(SongsController).to receive(:upload_mp3).and_return('/uploads/test.mp3')
+      allow_any_instance_of(Artist::SongsController).to receive(:upload_mp3).and_return('/uploads/test.mp3')
 
       expect {
-        post songs_path, params: { song: { title: 'New Track', genre: 'Rock', description: 'Cool song', mp3_file: dummy_file } }
+        post artist_songs_path, params: { song: { title: 'New Track', genre: 'Rock', description: 'Cool song', mp3_file: dummy_file } }
       }.to change(Song, :count).by(1)
 
-      expect(response).to redirect_to(songs_path)
+      expect(response).to redirect_to(artist_songs_path)
       expect(Song.last.title).to eq('New Track')
     end
 
@@ -45,8 +45,8 @@ RSpec.describe "Songs CRUD", type: :request do
       let!(:song) { Song.create!(title: 'Old Song', genre: 'Pop', mp3_file_path: '/uploads/old.mp3', user: artist) }
 
       it "updates text details without changing MP3" do
-        patch song_path(song), params: { song: { title: 'Updated Title', genre: 'Synthpop' } }
-        expect(response).to redirect_to(song_path(song))
+        patch artist_song_path(song), params: { song: { title: 'Updated Title', genre: 'Synthpop' } }
+        expect(response).to redirect_to(artist_song_path(song))
         
         song.reload
         expect(song.title).to eq('Updated Title')
@@ -55,13 +55,13 @@ RSpec.describe "Songs CRUD", type: :request do
 
       it "treats as new upload when a new MP3 file is provided" do
         dummy_file = fixture_file_upload(Rails.root.join('Gemfile'), 'audio/mpeg')
-        allow_any_instance_of(SongsController).to receive(:upload_mp3).and_return('/uploads/brand_new.mp3')
+        allow_any_instance_of(Artist::SongsController).to receive(:upload_mp3).and_return('/uploads/brand_new.mp3')
 
         expect {
-          patch song_path(song), params: { song: { title: 'Updated Title', mp3_file: dummy_file } }
+          patch artist_song_path(song), params: { song: { title: 'Updated Title', mp3_file: dummy_file } }
         }.to change(Song, :count).by(1) # Count increases because it's treated as a new upload!
 
-        expect(response).to redirect_to(songs_path)
+        expect(response).to redirect_to(artist_songs_path)
       end
 
       it "deletes a song" do
@@ -69,10 +69,10 @@ RSpec.describe "Songs CRUD", type: :request do
         allow_any_instance_of(Song).to receive(:delete_mp3_file).and_return(true)
 
         expect {
-          delete song_path(song)
+          delete artist_song_path(song)
         }.to change(Song, :count).by(-1)
 
-        expect(response).to redirect_to(songs_path)
+        expect(response).to redirect_to(artist_songs_path)
       end
     end
   end

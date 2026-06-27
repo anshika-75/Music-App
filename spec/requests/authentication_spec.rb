@@ -16,7 +16,7 @@ RSpec.describe "Authentication and Accounts", type: :request do
       expect(user.role).to eq('artist')
       expect(user.artist_profile).to be_present
       expect(session[:user_id]).to eq(user.id)
-      expect(response).to redirect_to(songs_path)
+      expect(response).to redirect_to(artist_songs_path)
     end
 
     it "registers a new listener user and creates their profile" do
@@ -28,7 +28,7 @@ RSpec.describe "Authentication and Accounts", type: :request do
       expect(user.role).to eq('listener')
       expect(user.listener_profile).to be_present
       expect(session[:user_id]).to eq(user.id)
-      expect(response).to redirect_to(search_path)
+      expect(response).to redirect_to(listener_search_path)
     end
   end
 
@@ -43,7 +43,7 @@ RSpec.describe "Authentication and Accounts", type: :request do
     it "logs in a user with valid credentials" do
       post login_path, params: { email: 'user@example.com', password: 'password' }
       expect(session[:user_id]).to eq(user.id)
-      expect(response).to redirect_to(search_path)
+      expect(response).to redirect_to(listener_search_path)
     end
 
     it "fails to log in with invalid credentials" do
